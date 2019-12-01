@@ -23,14 +23,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: timer.h 1115 2016-12-27 20:57:29Z li $
+ * $Id: timer.cpp 497 2019-12-01 08:36:53Z li $
  */
 
 #include <ctime>
 #include <sys/time.h>
 #include "timer.h"
-
-namespace sdibench {
 
 double timer::microtime() {
   struct timeval t{};
@@ -68,6 +66,4 @@ double timer::stop() {
 
 double timer::total() {
   return (double) total_ / CLOCKS_PER_SEC;
-}
-
 }

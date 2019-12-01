@@ -23,16 +23,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: log.h 998 2014-12-18 12:07:14Z li $
+ * $Id: sdi-index.h 497 2019-12-01 08:36:53Z li $
  */
 
 #ifndef SDI_INDEX_H
 #define SDI_INDEX_H
 
-#define INDEX_BUFFER 4096
-
-#include <map>
-#include <vector>
 #include "sdi-block.h"
 #include "sdi-db.h"
 #include "sdi-entry.h"
@@ -41,7 +37,6 @@ namespace sdibench {
 
 class index {
 public:
-  typedef typename std::vector<entry>::iterator iterator;
   explicit index(db &);
   virtual ~index();
   size_t best();

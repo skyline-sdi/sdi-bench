@@ -23,15 +23,14 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: log.h 998 2014-12-18 12:07:14Z li $
+ * $Id: sdi-index.cpp 497 2019-12-01 08:36:53Z li $
  */
 
 #include <iostream>
-#include <vector>
 #include "sdi-db.h"
 #include "sdi-entry.h"
 #include "sdi-index.h"
-#include "sdi-sort.h"
+#include "sort.h"
 
 namespace sdibench {
 
@@ -140,8 +139,8 @@ void index::stop() {
   }
 }
 
-size_t index::stop(size_t d) {
-  stop_[d] = true;
+size_t index::stop(size_t dimension) {
+  stop_[dimension] = true;
   size_t s = 0;
   for (size_t d = 0; d < dimensionality_; ++d) {
     if (stop_[d]) {

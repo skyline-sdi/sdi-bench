@@ -23,15 +23,13 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: timer.h 1115 2016-12-27 20:57:29Z li $
+ * $Id: timer.h 497 2019-12-01 08:36:53Z li $
  */
 
-#ifndef BENCH_TIMER_H_
-#define BENCH_TIMER_H_
+#ifndef TIMER_H_
+#define TIMER_H_
 
 #include <ctime>
-
-namespace sdibench {
 
 class timer {
 public:
@@ -49,6 +47,4 @@ private:
   clock_t total_ = 0;
 };
 
-}
-
-#endif //BENCH_TIMER_H_
+#endif //TIMER_H_

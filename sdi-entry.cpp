@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: log.h 998 2014-12-18 12:07:14Z li $
+ * $Id: sdi-entry.cpp 497 2019-12-01 08:36:53Z li $
  */
 
 #include <iostream>
