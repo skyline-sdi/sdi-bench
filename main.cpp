@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: main.cpp 497 2019-12-01 08:36:53Z li $
+ * $Id: main.cpp 567 2019-12-23 19:21:14Z li $
  */
 
 #include <array>
@@ -32,7 +32,7 @@
 #include "timer.h"
 using namespace sdibench;
 
-bool run_skyline(const char *name, size_t cardinality, size_t dimensionality, const char *filename) {
+auto run_skyline(const char *name, size_t cardinality, size_t dimensionality, const char *filename) -> bool {
   timer build;
   timer query;
   sdi method(cardinality, dimensionality);
@@ -67,6 +67,7 @@ bool run_skyline(const char *name, size_t cardinality, size_t dimensionality, co
   std::cout << "# Dimensions: " << dimensionality << std::endl;
   std::cout << "# Skyline: " << db::SKY << std::endl;
   std::cout << "# Dominance Test Count: " << db::DT << std::endl;
+  std::cout << "# Dominance Test Extended Count: " << db::DTE << std::endl;
   std::cout << "# Stop Line Count: " << db::STOP << std::endl;
   std::cout << "# Tested Tuple Count: " << db::TT << std::endl;
   std::cout << "# IO Count: " << db::IO << std::endl;
@@ -79,15 +80,14 @@ bool run_skyline(const char *name, size_t cardinality, size_t dimensionality, co
   return true;
 }
 
-int main(int argc, char **argv) {
+auto main(int argc, char **argv) -> int {
   if (argc < 3) {
-    std::cout << "Usage: bench-sdi CARDINALITY DIMENSIONALITY [FILE]" << std::endl;
+    std::cout << "Usage: bench-sdi [FILE] DIMENSIONALITY CARDINALITY" << std::endl;
     return 0;
   }
-  size_t cardinality = strtoul(argv[1], nullptr, 10);
-  size_t dimensionality = strtoul(argv[2], nullptr, 10);
-  const char *filename = argc > 3 ? argv[3] : nullptr;
+  const char *filename = argc > 3 ? argv[1] : nullptr;
+  size_t dimensionality = argc > 3 ? strtoul(argv[2], nullptr, 10): strtoul(argv[1], nullptr, 10);
+  size_t cardinality = argc > 3 ? strtoul(argv[3], nullptr, 10) : strtoul(argv[2], nullptr, 10);
   run_skyline("SDI", cardinality, dimensionality, filename);
   return 0;
 }
-

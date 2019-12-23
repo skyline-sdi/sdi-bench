@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: sdi.cpp 497 2019-12-01 08:36:53Z li $
+ * $Id: sdi.cpp 568 2019-12-23 19:41:11Z li $
  */
 
 #include <list>
@@ -35,8 +35,10 @@ namespace sdibench {
 sdi::sdi(size_t cardinality, size_t dimensionality) : D_(cardinality, dimensionality), I_(D_) {
   cardinality_ = cardinality;
   dimensionality_ = dimensionality;
+#ifndef WITHOUT_STOPLINE
   max_ = dimensionality_;
   mean_ = dimensionality_ + 1;
+#endif
 }
 
 void sdi::build(std::istream &in) {
@@ -125,7 +127,8 @@ void sdi::query() {
   }
 }
 
-K sdi::better_(K key1, K key2) {
+#ifndef WITHOUT_STOPLINE
+auto sdi::better_(K key1, K key2) -> K {
   auto o1 = I_.offsets(key1);
   auto o2 = I_.offsets(key2);
   if (o1[max_] < o2[max_]) {
@@ -139,8 +142,9 @@ K sdi::better_(K key1, K key2) {
     return key2;
   }
 }
+#endif
 
-size_t sdi::skyline_(std::vector<entry *> &block, size_t d) {
+auto sdi::skyline_(std::vector<entry *> &block, size_t d) -> size_t {
   auto &D = D_;
   auto &I = I_;
   auto &S = S_;

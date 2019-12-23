@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: sdi-index.h 497 2019-12-01 08:36:53Z li $
+ * $Id: sdi-index.h 566 2019-12-23 15:12:34Z li $
  */
 
 #ifndef SDI_INDEX_H
@@ -39,18 +39,18 @@ class index {
 public:
   explicit index(db &);
   virtual ~index();
-  size_t best();
+  auto best() -> size_t;
   void build();
-  bool dominate(size_t, K);
+  auto dominate(size_t, K) -> bool;
   void dump(std::ostream &);
-  size_t height() const;
-  size_t *offsets(K) const;
+  auto height() const -> size_t;
+  auto offsets(K) const -> size_t *;
   void skyline(size_t, K);
   void stop();
-  size_t stop(size_t);
-  size_t width() const;
-  entry *operator()(size_t);
-  entry *operator()(size_t) const;
+  auto stop(size_t) -> size_t;
+  auto width() const -> size_t;
+  auto operator()(size_t) -> entry *;
+  auto operator()(size_t) const -> entry *;
 private:
   db &D_; // The database D.
   block<entry> *I_; // The dimension index I.

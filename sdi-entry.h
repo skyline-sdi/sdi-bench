@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: sdi-entry.h 497 2019-12-01 08:36:53Z li $
+ * $Id: sdi-entry.h 566 2019-12-23 15:12:34Z li $
  */
 
 #ifndef SDI_ENTRY_H
@@ -41,9 +41,9 @@ struct entry {
   entry(K, V);
 };
 
-bool operator==(const entry &e1, const entry &e2);
-bool operator<(const entry &e1, const entry &e2);
-std::ostream &operator<<(std::ostream &out, const entry &e);
+auto operator==(const entry &e1, const entry &e2) -> bool;
+auto operator<(const entry &e1, const entry &e2) -> bool;
+auto operator<<(std::ostream &out, const entry &e) -> std::ostream &;
 
 }
 

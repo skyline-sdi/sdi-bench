@@ -23,47 +23,47 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: timer.cpp 497 2019-12-01 08:36:53Z li $
+ * $Id: timer.cpp 566 2019-12-23 15:12:34Z li $
  */
 
 #include <ctime>
 #include <sys/time.h>
 #include "timer.h"
 
-double timer::microtime() {
+auto timer::microtime() -> double {
   struct timeval t{};
   gettimeofday(&t, (struct timezone *) nullptr);
   return t.tv_sec + t.tv_usec / 1000000.0;
 }
 
-time_t timer::now() {
+auto timer::now() -> time_t {
   return time(nullptr);
 }
 
-double timer::reset() {
+auto timer::reset() -> double {
   stop_ = 0;
   total_ = 0;
   return start_ = clock();
 }
 
-double timer::runtime() {
+auto timer::runtime() -> double {
   if (!stop_) {
     stop_ = clock();
   }
   return (double) (stop_ - start_) / CLOCKS_PER_SEC;
 }
 
-double timer::start() {
+auto timer::start() -> double {
   stop_ = 0;
   return start_ = clock();
 }
 
-double timer::stop() {
+auto timer::stop() -> double {
   stop_ = clock();
   total_ += stop_ - start_;
   return stop_;
 }
 
-double timer::total() {
+auto timer::total() -> double {
   return (double) total_ / CLOCKS_PER_SEC;
 }

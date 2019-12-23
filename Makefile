@@ -1,10 +1,16 @@
 CXX = c++
 CXXFLAGS = -O3 -m64 -std=c++11
 
-all: sdi
+all: sdi sdi-nsl
 
-sdi:
-	$(CXX) $(CXXFLAGS) -o $@ *.cpp
+bin:
+	mkdir -p bin
+
+sdi: bin
+	$(CXX) $(CXXFLAGS) -o bin/$@ *.cpp
+
+sdi-nsl: bin
+	$(CXX) $(CXXFLAGS) -o bin/$@ *.cpp -DWITHOUT_STOPLINE
 
 clean:
-	rm -f sdi
+	rm -rf bin

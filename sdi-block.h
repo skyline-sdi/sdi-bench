@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: sdi-block.h 497 2019-12-01 08:36:53Z li $
+ * $Id: sdi-block.h 566 2019-12-23 15:12:34Z li $
  */
 
 #ifndef SDI_BLOCK_H
@@ -42,14 +42,14 @@ class block {
 public:
   explicit block(size_t, size_t);
   virtual ~block();
-  size_t height() const;
-  size_t width() const;
-  _T *operator()(size_t);
-  _T *operator()(size_t) const;
-  _T &operator()(size_t, size_t);
-  _T &operator()(size_t, size_t) const;
-  _T &operator[](size_t);
-  _T &operator[](size_t) const;
+  auto height() const -> size_t;
+  auto width() const -> size_t;
+  auto operator()(size_t) -> _T *;
+  auto operator()(size_t) const -> _T *;
+  auto operator()(size_t, size_t) -> _T &;
+  auto operator()(size_t, size_t) const -> _T &;
+  auto operator[](size_t) -> _T &;
+  auto operator[](size_t) const -> _T &;
 private:
   _T *block_ = nullptr;
   size_t height_ = 0;
@@ -68,42 +68,42 @@ block<_T>::~block() {
 }
 
 template<class _T>
-size_t block<_T>::height() const {
+auto block<_T>::height() const -> size_t {
   return height_;
 }
 
 template<class _T>
-size_t block<_T>::width() const {
+auto block<_T>::width() const -> size_t {
   return width_;
 }
 
 template<class _T>
-_T *block<_T>::operator()(size_t row) {
+auto block<_T>::operator()(size_t row) -> _T * {
   return &block_[row * width_];
 }
 
 template<class _T>
-_T *block<_T>::operator()(size_t row) const {
+auto block<_T>::operator()(size_t row) const -> _T * {
   return &block_[row * width_];
 }
 
 template<class _T>
-_T &block<_T>::operator()(size_t row, size_t offset) {
+auto block<_T>::operator()(size_t row, size_t offset) -> _T & {
   return block_[row * width_ + offset];
 }
 
 template<class _T>
-_T &block<_T>::operator()(size_t row, size_t offset) const {
+auto block<_T>::operator()(size_t row, size_t offset) const -> _T & {
   return block_[row * width_ + offset];
 }
 
 template<class _T>
-_T &block<_T>::operator[](size_t index) {
+auto block<_T>::operator[](size_t index) -> _T & {
   return block_[index];
 }
 
 template<class _T>
-_T &block<_T>::operator[](size_t index) const {
+auto block<_T>::operator[](size_t index) const -> _T & {
   return block_[index];
 }
 

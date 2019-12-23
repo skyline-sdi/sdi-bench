@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: sdi-db.cpp 497 2019-12-01 08:36:53Z li $
+ * $Id: sdi-db.cpp 567 2019-12-23 19:21:14Z li $
  */
 
 #include <array>
@@ -31,20 +31,23 @@
 #include <iomanip>
 #include "sdi-db.h"
 
-#define FLAGS 3
-#define SKIP 2
-#define SKYLINE 1
+#define FLAGS 5
 #define TEST 0
+#define SKYLINE 1
+#define SKIP 2
+#define MIN 3
+#define SUM 4
 
 namespace sdibench {
 
 size_t db::DT = 0;
+size_t db::DTE = 0;
 size_t db::IO = 0;
 size_t db::SKY = 0;
 size_t db::STOP = 0;
 size_t db::TT = 0;
 
-std::istream &operator>>(std::istream &in, db &db) {
+auto operator>>(std::istream &in, db &db) -> std::istream & {
   auto delim = " ,";
   std::array<char, 4096> line{};
   auto data = line.data();
@@ -52,20 +55,32 @@ std::istream &operator>>(std::istream &in, db &db) {
     in.getline(data, 4096);
     char *ptr = strtok(data, delim);
     size_t n = 0;
+    V min = 1;
+    V sum = 0;
+    V value = 0;
     if (ptr != nullptr) {
       while (n++ < db.width_) {
-        db.put_(strtod(ptr, nullptr));
+        value = strtod(ptr, nullptr);
+        if (value < min) {
+          min = value;
+        }
+        sum += value;
+        db.put_(value);
         ptr = strtok(nullptr, delim);
       }
       db.put_(0); // Testing flag.
       db.put_(0); // Skyline flag.
       db.put_(0); // Skip flag.
+      db.put_(min); // Min value.
+      db.put_(sum); // Sum value.
+      min = 1;
+      sum = 0;
     }
   }
   return in;
 }
 
-std::ostream &operator<<(std::ostream &out, const db &db) {
+auto operator<<(std::ostream &out, const db &db) -> std::ostream & {
   size_t n = 0;
   while (n < db.length_) {
     out << std::setprecision(8);
@@ -73,9 +88,9 @@ std::ostream &operator<<(std::ostream &out, const db &db) {
     for (size_t i = 1; i < db.width_; ++i) {
       out << " " << db[n++];
     }
-    n++; // Skip testing flag.
-    n++; // Skip skyline flag.
-    n++; // Skip skipping flag.
+    for (size_t i = 0; i < FLAGS; ++i) {
+      n++; // Skip flags.
+    }
     out << std::endl;
   }
   return out;
@@ -89,7 +104,11 @@ db::~db() {
   delete[] data_;
 }
 
-bool db::dominate(V *p1, V *p2) {
+auto db::dominate(V *p1, V *p2) -> bool {
+  ++DTE;
+  if (incomparable(p1, p2)) {
+    return false;
+  }
   ++DT;
   bool dominating = false;
   for (size_t i = 0; i < width_; ++i, ++p1, ++p2) {
@@ -102,38 +121,43 @@ bool db::dominate(V *p1, V *p2) {
   return dominating;
 }
 
-bool db::dominate(V *p1, size_t row2) {
+auto db::dominate(V *p1, size_t row2) -> bool {
   return dominate(p1, &data_[row2 * (width_ + FLAGS)]);
 }
 
-bool db::dominate(size_t row1, size_t row2) {
+auto db::dominate(size_t row1, size_t row2) -> bool {
   return dominate(&data_[row1 * (width_ + FLAGS)], &data_[row2 * (width_ + FLAGS)]);
 }
 
-bool db::empty() {
+auto db::empty() -> bool {
   return length_ == 0;
 }
 
-size_t db::height() const {
+auto db::height() const -> size_t {
   return height_;
 }
 
-size_t db::length() const {
+auto db::incomparable(const V *s, const V *t) -> bool {
+  // Returns true of a skyline s is incomparable with a testing tuple t.
+  return !(*(s + width_ + MIN) <= *(t + width_ + MIN) && *(s + width_ + SUM) <= *(t + width_ + SUM));
+}
+
+auto db::length() const -> size_t {
   return length_;
 }
 
-size_t db::size() const {
+auto db::size() const -> size_t {
   return length_ / (width_ + FLAGS);
 }
 
-bool db::skipped(size_t row) const {
+auto db::skipped(size_t row) const -> bool {
   return data_[row * (width_ + FLAGS) + width_ + SKIP] > 0;
 }
 void db::skipped(size_t row, bool flag) {
   data_[row * (width_ + FLAGS) + width_ + SKIP] = flag;
 }
 
-bool db::skyline(size_t row) const {
+auto db::skyline(size_t row) const -> bool {
   return data_[row * (width_ + FLAGS) + width_ + SKYLINE] > 0;
 }
 
@@ -141,32 +165,32 @@ void db::skyline(size_t row, bool flag) {
   data_[row * (width_ + FLAGS) + width_ + SKYLINE] = flag;
 }
 
-bool db::tested(size_t row) const {
+auto db::tested(size_t row) const -> bool {
   return data_[row * (width_ + FLAGS) + width_ + TEST] > 0;
 }
 void db::tested(size_t row, bool flag) {
   data_[row * (width_ + FLAGS) + width_ + TEST] = flag;
 }
 
-size_t db::width() const {
+auto db::width() const -> size_t {
   return width_;
 }
 
-V *db::operator()(size_t row) {
+auto db::operator()(size_t row) -> V * {
   ++IO;
   return &data_[row * (width_ + FLAGS)];
 }
 
-V *db::operator()(size_t row) const {
+auto db::operator()(size_t row) const -> V * {
   ++IO;
   return &data_[row * (width_ + FLAGS)];
 }
 
-V &db::operator[](size_t n) {
+auto db::operator[](size_t n) -> V & {
   return data_[n];
 }
 
-V &db::operator[](size_t n) const {
+auto db::operator[](size_t n) const -> V & {
   return data_[n];
 }
 

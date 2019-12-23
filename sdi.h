@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: sdi.h 497 2019-12-01 08:36:53Z li $
+ * $Id: sdi.h 568 2019-12-23 19:41:11Z li $
  */
 
 #ifndef SDI_H
@@ -42,14 +42,14 @@ public:
   void build(std::istream &in);
   void query();
 private:
-  K better_(K, K);
-  size_t skyline_(std::vector<entry *> &, size_t);
+  auto skyline_(std::vector<entry *> &, size_t) -> size_t;
   db D_;
   index I_;
   std::vector<K> S_;
   size_t cardinality_ = 0;
   size_t dimensionality_ = 0;
 #ifndef WITHOUT_STOPLINE
+  auto better_(K, K) -> K;
   size_t max_ = 0;
   size_t mean_ = 0;
   K stop_ = 0;

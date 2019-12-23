@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: sdi-entry.cpp 497 2019-12-01 08:36:53Z li $
+ * $Id: sdi-entry.cpp 566 2019-12-23 15:12:34Z li $
  */
 
 #include <iostream>
@@ -37,18 +37,18 @@ entry::entry(K k) : key(k) {
 entry::entry(K k, V v) : key(k), value(v) {
 }
 
-bool operator==(const entry &e1, const entry &e2) {
+auto operator==(const entry &e1, const entry &e2) -> bool {
   return e1.key == e2.key;
 }
 
-bool operator<(const entry &e1, const entry &e2) {
+auto operator<(const entry &e1, const entry &e2) -> bool {
   if (e1.value == e2.value) {
     return e1.key < e2.key;
   }
   return e1.value < e2.value;
 }
 
-std::ostream &operator<<(std::ostream &out, const entry &e) {
+auto operator<<(std::ostream &out, const entry &e) -> std::ostream & {
   out << e.value << ":" << e.key;
   return out;
 }

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: sdi-index.cpp 497 2019-12-01 08:36:53Z li $
+ * $Id: sdi-index.cpp 566 2019-12-23 15:12:34Z li $
  */
 
 #include <iostream>
@@ -56,7 +56,7 @@ index::~index() {
   delete[] stop_;
 }
 
-size_t index::best() {
+auto index::best() -> size_t {
   size_t b = 0;
   for (size_t d = 0; d < dimensionality_; ++d) {
     if (stop_[d]) {
@@ -97,7 +97,7 @@ void index::build() {
   }
 }
 
-bool index::dominate(size_t d, K key) {
+auto index::dominate(size_t d, K key) -> bool {
   auto &&s = (*S_)(d);
   for (size_t i = 0; i < cardinality_; ++i) {
     if (!s[i]) {
@@ -121,11 +121,11 @@ void index::dump(std::ostream &out) {
   }
 }
 
-size_t index::height() const {
+auto index::height() const -> size_t {
   return cardinality_;
 }
 
-size_t *index::offsets(K key) const {
+auto index::offsets(K key) const -> size_t * {
   return (*O_)(key);
 }
 
@@ -139,7 +139,7 @@ void index::stop() {
   }
 }
 
-size_t index::stop(size_t dimension) {
+auto index::stop(size_t dimension) -> size_t {
   stop_[dimension] = true;
   size_t s = 0;
   for (size_t d = 0; d < dimensionality_; ++d) {
@@ -150,15 +150,15 @@ size_t index::stop(size_t dimension) {
   return s;
 }
 
-size_t index::width() const {
+auto index::width() const -> size_t {
   return dimensionality_;
 }
 
-entry *index::operator()(size_t dimension) {
+auto index::operator()(size_t dimension) -> entry * {
   return (*I_)(dimension);
 }
 
-entry *index::operator()(size_t dimension) const {
+auto index::operator()(size_t dimension) const -> entry * {
   return (*I_)(dimension);
 }
 

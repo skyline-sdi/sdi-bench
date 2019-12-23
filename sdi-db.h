@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: sdi-db.h 497 2019-12-01 08:36:53Z li $
+ * $Id: sdi-db.h 567 2019-12-23 19:21:14Z li $
  */
 
 #ifndef SDI_DB_H
@@ -35,10 +35,11 @@
 namespace sdibench {
 
 class db {
-  friend std::istream &operator>>(std::istream &, db &);
-  friend std::ostream &operator<<(std::ostream &, const db &);
+  friend auto operator>>(std::istream &, db &) -> std::istream &;
+  friend auto operator<<(std::ostream &, const db &) -> std::ostream &;
 public:
   static size_t DT; // Dominance Test count
+  static size_t DTE; // Dominance Test Extended count
   static size_t IO; // IO count
   static size_t SKY; // Skyline size
   static size_t STOP; // Stop line count
@@ -46,24 +47,25 @@ public:
   db() = default;
   explicit db(size_t, size_t);
   virtual ~db();
-  bool dominate(V *, V *);
-  bool dominate(V *, size_t);
-  bool dominate(size_t, size_t);
-  bool empty();
-  size_t height() const;
-  size_t length() const;
-  size_t size() const;
-  bool skipped(size_t) const;
+  auto dominate(V *, V *) -> bool;
+  auto dominate(V *, size_t) -> bool;
+  auto dominate(size_t, size_t) -> bool;
+  auto empty() -> bool;
+  auto height() const -> size_t;
+  auto incomparable(const V *, const V *) -> bool ;
+  auto length() const -> size_t;
+  auto size() const -> size_t;
+  auto skipped(size_t) const -> bool;
   void skipped(size_t, bool);
-  bool skyline(size_t) const;
+  auto skyline(size_t) const -> bool;
   void skyline(size_t, bool);
-  bool tested(size_t) const;
+  auto tested(size_t) const -> bool;
   void tested(size_t, bool);
-  size_t width() const;
-  V *operator()(size_t);
-  V *operator()(size_t) const;
-  V &operator[](size_t);
-  V &operator[](size_t) const;
+  auto width() const -> size_t;
+  auto operator()(size_t) -> V *;
+  auto operator()(size_t) const -> V *;
+  auto operator[](size_t) -> V &;
+  auto operator[](size_t) const -> V &;
 private:
   void put_(V);
   V *data_ = nullptr;

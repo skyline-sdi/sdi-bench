@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: timer.h 497 2019-12-01 08:36:53Z li $
+ * $Id: timer.h 566 2019-12-23 15:12:34Z li $
  */
 
 #ifndef TIMER_H_
@@ -33,14 +33,14 @@
 
 class timer {
 public:
-  static double microtime();
-  static time_t now();
+  static auto microtime() -> double;
+  static auto now() -> time_t;
   timer() = default;
-  double reset();
-  double runtime();
-  double start();
-  double stop();
-  double total();
+  auto reset() -> double;
+  auto runtime() -> double;
+  auto start() -> double;
+  auto stop() -> double;
+  auto total() -> double;
 private:
   clock_t start_ = 0;
   clock_t stop_ = 0;
